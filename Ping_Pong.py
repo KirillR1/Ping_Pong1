@@ -1,8 +1,9 @@
 from pygame import *
 
 
-
-window = display.set_mode((700, 500))
+win_height = 700
+win_width = 500
+window = display.set_mode((win_height, win_width))
 display.set_caption("PingPong")
 background = transform.scale(image.load("black.jpg"), (700, 500))
 
@@ -31,14 +32,20 @@ class Player(GameSprite):
 class Ball(GameSprite):
     def update(self):
         #self.rect.y += self.speed
+        #self.rect.x += self.speed
         pass
+
+
+    
 
 
 player1 = Player("raketka.png", 68, 227, 5, 30, 80, K_w, K_s)
 player2 = Player("raketka.png", 600, 227, 5, 30, 80, K_UP, K_DOWN)
-ball = Ball("ball.png", 350, 250, 5, 40, 40, K_h, K_y)
+ball = Ball("ball.png", 300, 250, 5, 40, 40, K_h, K_y)
 
 
+b_speed_x = 4
+b_speed_y = 4
 clock = time.Clock()
 FPS = 60
 run = True
@@ -56,6 +63,15 @@ while run:
             player2.update()
             player2.reset()
             ball.reset()
+            ball.rect.x += b_speed_x
+            ball.rect.y += b_speed_y
+            if ball.rect.y > win_width-50 or ball.rect.y < 0:
+                b_speed_y *= -1
+            if sprite.collide_rect(player1, ball) or sprite.collide_rect(player2, ball):
+                b_speed_x *= -1
+                #b_speed_y *= -1
+            if ball.rect.x > win_height-40 or ball.rect.x < 0:
+                finish = True
 
     display.update()
     clock.tick(FPS)
